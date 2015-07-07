@@ -11,6 +11,7 @@
 //=============================================================================
 // define
 //-----------------------------------------------------------------------------
+#define FQSPI 80 // 80 or 40 MHz
 #define LSDK_BASE 	0x402000B0
 typedef void (* sdk_call)(void);
 //=============================================================================
@@ -23,8 +24,13 @@ void call_user_start(void)
 {
 		// коррекция QSPI на 80 MHz
 		SPI0_USER |= SPI_CS_SETUP; // +1 такт перед CS = 0x80000064
+#if FQSPI == 80
 		GPIO_MUX_CFG |= (1<< MUX_SPI0_CLK_BIT); // QSPI = 80 MHz
 		SPI0_CTRL = 0x016ab000; // ((SPI0_CTRL >> 12) << 12) | BIT(12);
+#else
+		GPIO_MUX_CFG &= 0xfffffeff;
+		SPI0_CTRL = 0x016aa101;
+#endif
 		// Всё - включаем кеширование, далее можно вызывать процедуры из flash
 		Cache_Read_Enable(0, 0, 0);
 		((sdk_call)(0x40200064))(); // переход в область flash, на следующую команду
