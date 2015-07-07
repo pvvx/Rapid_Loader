@@ -1,0 +1,3 @@
+/app/main/deep_sleep.c
+*.output*
+/bin/_temp_by_dltool
