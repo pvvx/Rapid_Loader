@@ -35,6 +35,7 @@ LINKFLAGS_eagle.app.v6 = \
     -T$(LD_FILE) \
 	-Wl,--no-check-sections	\
     -u call_user_start \
+	-u loader_flash_boot	\
 	-Wl,-static \
 	-Wl,-Map -Wl,$(@:.out=.map) \
 	-Wl,--start-group \

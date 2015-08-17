@@ -20,6 +20,7 @@ PHDRS
 
 /*  Default entry point:  */
 ENTRY(call_user_start)
+EXTERN(loader_flash_boot)
 PROVIDE(_memmap_vecbase_reset = 0x40000000);
 /* Various memory-map dependent cache attribute settings: */
 _memmap_cacheattr_wb_base = 0x00000110;
@@ -135,6 +136,7 @@ SECTIONS
     *(.gnu.version)
     _text_end = ABSOLUTE(.);
     _etext = .;
+    *(.loader.text)
   } >iram1_0_seg :iram1_0_phdr
 
   .lit4 : ALIGN(4)

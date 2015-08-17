@@ -41,7 +41,7 @@ CLREEPADDR := 0x79000
 
 SDK_TOOLS	?= c:/Espressif/utils
 #ESPTOOL		?= $(SDK_TOOLS)/esptool
-ESPTOOL		?= C:/Python27/python.exe $(SDK_TOOLS)/esptool.py
+ESPTOOL		?= C:/Python27/python.exe $(CWD)esptool.py
 
 CSRCS ?= $(wildcard *.c)
 ASRCs ?= $(wildcard *.s)
@@ -109,10 +109,11 @@ endef
 
 $(BINODIR)/%.bin: $(IMAGEODIR)/%.out
 	@mkdir -p ../$(FIRMWAREDIR)
-	@echo "FW ../$(FIRMWAREDIR)/$(ADDR_FW1).bin + ../$(FIRMWAREDIR)/$(ADDR_FW2).bin"
+	$(OBJCOPY) --only-section .lit4 -O binary $< ../$(FIRMWAREDIR)/addld.bin
 	$(ESPTOOL) elf2image -o ../$(FIRMWAREDIR)/ $(GENIMAGEOPTION) $<
 	$(ESPTOOL) image_info ../$(FIRMWAREDIR)/0x00000.bin
 	@cp -f ../$(FIRMWAREDIR)/0x00000.bin ../$(FIRMWAREDIR)/rapid_loader.bin
+	@dd if=../$(FIRMWAREDIR)/addld.bin >>../$(FIRMWAREDIR)/rapid_loader.bin
 	
 #	@dd if=../$(FIRMWAREDIR)/0x00000.bin bs=1 count=1 >../$(FIRMWAREDIR)/rapid_loader.bin
 #	@dd if=/dev/zero bs=1 count=1 >>../$(FIRMWAREDIR)/rapid_loader.bin
