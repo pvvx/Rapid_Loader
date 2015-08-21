@@ -17,7 +17,7 @@
 #define next_flash_header_addr 	0x402000c0
 
 typedef void (* loader_call)(void *);
-extern char _text_end;
+//extern char _text_end;
 //=============================================================================
 // IRAM code
 //=============================================================================
@@ -41,4 +41,14 @@ void call_user_start(void)
 		// Запускаем загрузку SDK с указателем на заголовок SPIFlashHeader (находится за данным загручиком по адресу с align 16)
 //		((loader_call)((uint32)(&loader_flash_boot) + FLASH_BASE - IRAM_BASE + 0x10))((struct SPIFlashHeader *)(((uint32)(&_text_end) + FLASH_BASE - IRAM_BASE + 0x17) & (~15)));
 		((loader_call)(loader_flash_boot_addr))((struct SPIFlashHeader *)(next_flash_header_addr));
+
+		// контрольня сумма отображает версию и частоту
+		// Checksum: 42 -> 40 MHz Ver2
+		// Checksum: 82 -> 80 MHz Ver2
+#if FQSPI == 80	// xSPI на 80 MHz
+		__asm__ __volatile__(".byte 0x71");
+#else			// xSPI на 40 MHz
+		__asm__ __volatile__(".byte 0xca");
+#endif
+
 }

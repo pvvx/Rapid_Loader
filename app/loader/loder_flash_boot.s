@@ -40,7 +40,6 @@ loader_flash_boot:
 		.byte	'r'
 		.byte	'V'
 		.byte	'2'
-		.byte	','
 		.byte	' '
 		.byte	'8'
 		.byte	'0'
