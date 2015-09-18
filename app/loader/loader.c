@@ -16,7 +16,7 @@
 #define loader_flash_boot_addr 	0x40200080
 #define next_flash_header_addr 	0x402000c0
 
-typedef void (* loader_call)(void *);
+typedef void (* loader_call)(void *) __attribute__ ((noreturn));
 //extern char _text_end;
 //=============================================================================
 // IRAM code
@@ -24,9 +24,10 @@ typedef void (* loader_call)(void *);
 // call_user_start() - вызов из заголовка, загрузчиком
 // ENTRY(call_user_start) in eagle.app.v6.ld
 //-----------------------------------------------------------------------------
-void call_user_start(void)
+void __attribute__ ((noreturn)) call_user_start(void)
 {
 //		Cache_Read_Disable();
+		IO_RTC_4 = 0; // Отключить блок WiFi (уменьшение потребления на время загрузки)
 		SPI0_USER |= SPI_CS_SETUP; // +1 такт перед CS = 0x80000064
 #if FQSPI == 80	// xSPI на 80 MHz
 		GPIO_MUX_CFG |= BIT(MUX_SPI0_CLK_BIT); // QSPI = 80 MHz
@@ -43,12 +44,6 @@ void call_user_start(void)
 		((loader_call)(loader_flash_boot_addr))((struct SPIFlashHeader *)(next_flash_header_addr));
 
 		// контрольня сумма отображает версию и частоту
-		// Checksum: 42 -> 40 MHz Ver2
-		// Checksum: 82 -> 80 MHz Ver2
-#if FQSPI == 80	// xSPI на 80 MHz
-		__asm__ __volatile__(".byte 0x71");
-#else			// xSPI на 40 MHz
-		__asm__ __volatile__(".byte 0xca");
-#endif
-
+		// Checksum: 43 -> 40 MHz Ver3
+		// Checksum: 83 -> 80 MHz Ver3
 }
