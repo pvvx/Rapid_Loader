@@ -29,7 +29,7 @@ extern volatile uint32 spi1_[64];		// 0x60000100
 extern volatile uint32 spi0_[64];		// 0x60000200
 extern volatile uint32 gpio_[64];		// 0x60000300
 extern volatile uint32 timer_[64];		// 0x60000600
-extern volatile uint32 rtc_[64];		// 0x60000700
+extern volatile uint32 rtc_[256];		// 0x60000700
 extern volatile uint32 iomux_[64];		// 0x60000800
 extern volatile uint32 wdt_[64];		// 0x60000900
 extern volatile uint32 scl_[64];		// 0x60000B00

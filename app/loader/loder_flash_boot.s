@@ -31,15 +31,15 @@ loader_flash_boot:
 		
 		movi.n	a2, 1
 		slli	a1, a2, 30
-//		callx0	a7
-		jx		a7
+
+		jx		a7 			// callx0 a7
 
 		.byte	'R'
 		.byte	'L'
 		.byte	'd'
 		.byte	'r'
 		.byte	'V'
-		.byte	'3'
+		.byte	'4'
 		.byte	' '
 		.byte	'8'
 		.byte	'0'
