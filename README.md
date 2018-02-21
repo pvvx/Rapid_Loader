@@ -11,7 +11,7 @@ Quick start and Support download 48 KB IRAM.
 количество символов вывода в logUART на 74880 baud сокращается.<br>
 Превый блок в 92 байта ROM грузит очень медленно.<br>
 Далее включается XIP и последующая загрузка блоков в IRAM<br>
-происходит на максимальной скорости в режиме DIO<br>
+происходит на максимальной скорости в режиме QIO<br>
 Стартовая процедура вызывается с нулевым использованием стека<br>
 
 [График загрузки ESP8266ex c Rapid Loader v3](https://raw.githubusercontent.com/pvvx/Rapid_Loader/master/ESP-01-StartSignals.gif)
