@@ -39,9 +39,11 @@ BLANKADDR := 0x7E000
 CLREEPBIN := ./$(FIRMWAREDIR)/clear_eep.bin
 CLREEPADDR := 0x79000
 
-SDK_TOOLS	?= c:/Espressif/utils
+SDK_TOOLS ?= c:/Espressif/utils
 #ESPTOOL		?= $(SDK_TOOLS)/esptool
-ESPTOOL		?= C:/Python27/python.exe $(CWD)esptool.py
+CWD ?=$(PDIR)
+PRJ_BASE := $(subst \,/,$(CWD))
+ESPTOOL	?= C:/Python27/python.exe $(PRJ_BASE)esptool.py
 
 CSRCS ?= $(wildcard *.c)
 ASRCs ?= $(wildcard *.s)
