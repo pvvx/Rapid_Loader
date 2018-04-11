@@ -4,7 +4,12 @@
 #
 #############################################################
 
-ESPOPTION ?= -p COM6 -b 256000
+ifneq ($(shell uname), Linux)
+ESPOPTION ?= -p COM7 -b 460800
+else
+ESPOPTION ?= -p /dev/ttyS7 -b 460800
+USE_WSL=1
+endif
 
 GENIMAGEOPTION = -ff 80m -fm qio -fs 4m
 
@@ -12,16 +17,23 @@ ADDR_FW1 = 0x00000
 ADDR_FW2 = 0x40000
 
 # Base directory for the compiler
-XTENSA_TOOLS_ROOT ?= c:/Espressif/xtensa-lx106-elf/bin
-#PATH := $(XTENSA_TOOLS_ROOT);$(PATH)
+ifdef USE_WSL
+XTENSA_TOOLS_ROOT ?= ~/esp/xtensa-lx106-elf/bin/
+#ESPTOOL	?= python $(WEB_BASE)esptool.py
+ESPTOOL	?= /mnt/c/Python27/python.exe ../esptool.py
+else
+XTENSA_TOOLS_ROOT ?= c:/Espressif/xtensa-lx106-elf/bin/
+ESPTOOL	?= C:/Python27/python.exe ../esptool.py
+endif
+
 
 # select which tools to use as compiler, librarian and linker
-CC := $(XTENSA_TOOLS_ROOT)/xtensa-lx106-elf-gcc
-AR := $(XTENSA_TOOLS_ROOT)/xtensa-lx106-elf-ar
-LD := $(XTENSA_TOOLS_ROOT)/xtensa-lx106-elf-gcc
-NM := $(XTENSA_TOOLS_ROOT)/xtensa-lx106-elf-nm
-CPP = $(XTENSA_TOOLS_ROOT)/xtensa-lx106-elf-cpp
-OBJCOPY = $(XTENSA_TOOLS_ROOT)/xtensa-lx106-elf-objcopy
+CC := $(XTENSA_TOOLS_ROOT)xtensa-lx106-elf-gcc
+AR := $(XTENSA_TOOLS_ROOT)xtensa-lx106-elf-ar
+LD := $(XTENSA_TOOLS_ROOT)xtensa-lx106-elf-gcc
+NM := $(XTENSA_TOOLS_ROOT)xtensa-lx106-elf-nm
+CPP = $(XTENSA_TOOLS_ROOT)xtensa-lx106-elf-cpp
+OBJCOPY = $(XTENSA_TOOLS_ROOT)xtensa-lx106-elf-objcopy
 CCFLAGS += -Os -Wall -Wno-pointer-sign -fno-tree-ccp -mno-target-align -mno-serialize-volatile -foptimize-register-move
 #
 # -Wall -Wno-pointer-sign -mno-target-align -mno-serialize-volatile -foptimize-register-move
@@ -38,12 +50,6 @@ BLANKBIN := ./$(FIRMWAREDIR)/blank.bin
 BLANKADDR := 0x7E000
 CLREEPBIN := ./$(FIRMWAREDIR)/clear_eep.bin
 CLREEPADDR := 0x79000
-
-SDK_TOOLS ?= c:/Espressif/utils
-#ESPTOOL		?= $(SDK_TOOLS)/esptool
-CWD ?=$(PDIR)
-PRJ_BASE := $(subst \,/,$(CWD))
-ESPTOOL	?= C:/Python27/python.exe $(PRJ_BASE)esptool.py
 
 CSRCS ?= $(wildcard *.c)
 ASRCs ?= $(wildcard *.s)
